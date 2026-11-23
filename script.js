@@ -157,4 +157,28 @@
       show(0);
     }
   }
+
+  /* --- видео с объектов: играют, когда видны; звук по нажатию --- */
+  const reels = [...d.querySelectorAll('.reel-v')];
+  if (reels.length) {
+    const vo = 'IntersectionObserver' in window && new IntersectionObserver(es => {
+      for (const e of es) {
+        const v = e.target.querySelector('video');
+        if (e.isIntersecting && !reduce) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+        else v.pause();
+      }
+    }, { threshold: 0.5 });
+    reels.forEach(r => {
+      const v = r.querySelector('video'), b = r.querySelector('.snd'), u = b.querySelector('use');
+      if (vo) vo.observe(r);
+      r.addEventListener('click', () => {
+        const on = v.muted;
+        reels.forEach(o => { const ov = o.querySelector('video'); ov.muted = true; o.querySelector('.snd use').setAttribute('href', '#i-mute'); });
+        v.muted = !on;
+        u.setAttribute('href', on ? '#i-sound' : '#i-mute');
+        b.setAttribute('aria-label', on ? 'Выключить звук' : 'Включить звук');
+        if (on) { const p = v.play(); if (p && p.catch) p.catch(() => {}); dataLayer.push({ event: 'video_sound', video: v.currentSrc }); }
+      });
+    });
+  }
 }
