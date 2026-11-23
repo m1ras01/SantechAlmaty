@@ -136,15 +136,14 @@
       if (i === cur) return;
       cur = i;
       const g = stages[i];
+      card.classList.remove('swap');
+      T.textContent = g.t; S.textContent = g.s;
+      use.setAttribute('href', '#i-' + g.ic);
+      card.classList.toggle('alert', g.st === 'alert');
+      card.classList.toggle('ok', g.st === 'ok');
+      dots.forEach((x, k) => x.classList.toggle('on', k < g.n));
+      void card.offsetWidth;
       card.classList.add('swap');
-      setTimeout(() => {
-        T.textContent = g.t; S.textContent = g.s;
-        use.setAttribute('href', '#i-' + g.ic);
-        card.classList.toggle('alert', g.st === 'alert');
-        card.classList.toggle('ok', g.st === 'ok');
-        dots.forEach((x, k) => x.classList.toggle('on', k < g.n));
-        card.classList.remove('swap');
-      }, 200);
     };
     const at = t => { let i = 0; stages.forEach((g, k) => { if (t >= g.at) i = k; }); return i; };
     if (vid) {

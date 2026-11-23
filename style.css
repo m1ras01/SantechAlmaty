@@ -295,8 +295,9 @@ h3{font-size:19px;line-height:1.25}
 .bld.done .route{opacity:0;transition:opacity .6s}
 .status{top:0;right:0;width:250px;padding:10px 14px 10px 10px;animation:none}
 .status .st-t{display:block;font-size:15px;font-weight:800}
-.status .st-t,.status .st-s{transition:opacity .25s}
-.status.swap .st-t,.status.swap .st-s{opacity:0}
+.status .st-t,.status .st-s{will-change:opacity}
+.status.swap .st-t,.status.swap .st-s{animation:stIn .35s ease both}
+@keyframes stIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .st-dots{display:flex;gap:4px;margin-top:7px}
 .st-dots i{width:22px;height:4px;border-radius:2px;background:#d5e3f1;transition:background .3s}
 .st-dots i.on{background:#1366d6}
@@ -313,7 +314,8 @@ h3{font-size:19px;line-height:1.25}
 .hero-art.video .status{top:-22px;right:-14px}
 @media (max-width:860px){
   .hero-art.video{max-width:none}
-  .hero-art.video .status{position:relative;top:auto;right:auto;left:auto;margin:-26px auto 0;width:min(300px,92%)}
+  .hero-art.video .status{position:relative;top:auto;right:auto;left:auto;margin:16px auto 0;width:min(320px,100%)}
+  .hero-video{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%)}
 }
 
 /* ===== правки дизайна v2 ===== */
