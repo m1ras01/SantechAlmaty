@@ -2,6 +2,34 @@
   const d = document;
   const WA = d.body.dataset.wa;
   window.dataLayer = window.dataLayer || [];
+  const ADS_ID = 'AW-17748279912';
+  const contactDestinations = {
+    call_click: ADS_ID + '/QgOkCP7j2r4dEOiEhY9C',
+    whatsapp_click: ADS_ID + '/E88OCIHk2r4dEOiEhY9C'
+  };
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', ADS_ID, { allow_enhanced_conversions: false });
+  const tagUrl = 'https://www.googletagmanager.com/gtag/js?id=' + ADS_ID;
+  if (!d.querySelector('script[src="' + tagUrl + '"]')) {
+    const tag = d.createElement('script');
+    tag.async = true;
+    tag.src = tagUrl;
+    d.head.appendChild(tag);
+  }
+  // These events measure contact-button clicks, not completed calls or messages.
+  const trackContact = (event, place) => {
+    window.dataLayer.push({ event, place });
+    try {
+      window.gtag('event', 'conversion', {
+        send_to: contactDestinations[event],
+        value: 0,
+        currency: 'USD'
+      });
+    } catch (_) {
+      // Analytics must never prevent the visitor from contacting the master.
+    }
+  };
 
   /* --- появление блоков при прокрутке (с задержкой по очереди) --- */
   d.querySelectorAll('[data-stagger]').forEach(g => {
@@ -89,8 +117,8 @@
     if (!a) return;
     const h = a.getAttribute('href') || '';
     const place = a.dataset.place || '';
-    if (h.startsWith('tel:')) dataLayer.push({ event: 'call_click', place });
-    else if (h.includes('wa.me')) dataLayer.push({ event: 'whatsapp_click', place });
+    if (h.startsWith('tel:')) trackContact('call_click', place);
+    else if (/^https:\/\/wa\.me\//i.test(h)) trackContact('whatsapp_click', place);
   });
 
   /* --- форма → готовое сообщение в WhatsApp --- */
@@ -109,6 +137,7 @@
     ].filter(Boolean).join('\n');
     const url = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text);
     dataLayer.push({ event: 'form_submit', service: v('service') });
+    trackContact('whatsapp_click', 'form');
     const ok = f.querySelector('.form-ok');
     ok.querySelector('a').href = url;
     ok.hidden = false;
@@ -182,3 +211,4 @@
     });
   }
 }
+
